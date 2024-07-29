@@ -2,7 +2,7 @@
 ru: Модуль для работы с базой данных.
 """
 from src.database.postgres_db import PostgresDB
-from src.app.config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER, DEFAULT_EMPLOYERS_LIST, SQL_SCRIPTS_PATH
+from src.app.config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER, DEFAULT_EMPLOYERS_LIST, SQL_SCRIPTS_CREATE_TABLES
 from src.hh.hh_objects import (
     HHSchedule,
     HHExperience,
@@ -18,7 +18,7 @@ from src.hh.hh_objects import (
 
 class DBManager(PostgresDB):
     """
-    Менеджер базы данных.
+    ru: Менеджер базы данных.
     """
 
     def __init__(self):
@@ -37,7 +37,7 @@ class DBManager(PostgresDB):
         """
         ru: Создание таблиц.
         """
-        with open(SQL_SCRIPTS_PATH) as file:
+        with open(SQL_SCRIPTS_CREATE_TABLES) as file:
             self._query(file.read())
 
     def get_employers_objects(self) -> list[HHEmployer]:
@@ -189,17 +189,6 @@ class DBManager(PostgresDB):
     def get_avg_salary(self):
         """
         ru: Получение средней зарплаты.
-        SELECT
-            ROUND(AVG(
-                CASE
-                    WHEN s2.from IS NOT NULL AND s2.to IS NOT NULL THEN (s2.from + s2.to) / 2
-                    WHEN s2.from IS NOT NULL THEN s2.from
-                    WHEN s2.to IS NOT NULL THEN s2.to
-                    ELSE 0
-                END
-            ), 2)
-        FROM
-            salary AS s2
         """
         return self._query_fetchone("""SELECT
             ROUND(AVG(
@@ -246,6 +235,7 @@ WHERE
     def get_vacancies_with_keyword(self, keyword: str):
         """
         ru: Получение вакансий по ключевому слову.
+        :param keyword: Ключевое слово
         """
         return self._query_fetchall("SELECT e.\"name\", v.name, s.from, s.to, c.name, v.alternate_url "
                                     "FROM vacancy AS v "

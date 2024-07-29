@@ -1,5 +1,6 @@
 """
 ru: Абстрактный класс для парсинга данных.
+en: Abstract class for parsing data.
 """
 
 from abc import ABC, abstractmethod

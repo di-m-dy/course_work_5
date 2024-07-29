@@ -1,5 +1,6 @@
 """
 ru: Базовые объекты для проекта.
+en: Base objects for the project.
 """
 from abc import ABC, abstractmethod
 

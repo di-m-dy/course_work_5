@@ -1,5 +1,6 @@
 """
 ru: Модуль для генерации списков объектов из базы данных.
+en: Module for generating lists of objects from the database.
 """
 from src.bases.base_generate import GenerateObjectsList
 from src.hh.hh_objects import HHVacancy, HHEmployer

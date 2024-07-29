@@ -27,4 +27,4 @@ DEFAULT_EMPLOYERS_LIST = [
     633069,  # ru:  Selectel
 ]
 # ru: Путь к SQL скриптам
-SQL_SCRIPTS_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "create_tables.sql")
+SQL_SCRIPTS_CREATE_TABLES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "sql_scripts", "create_tables.sql")

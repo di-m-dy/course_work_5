@@ -1,5 +1,6 @@
 """
 ru: Модуль для работы с базой данных Postgres.
+en: Module for working with the Postgres database.
 """
 import psycopg2
 

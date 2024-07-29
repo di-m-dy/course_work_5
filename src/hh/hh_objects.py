@@ -1,5 +1,5 @@
 """
-Модуль содержит необходимые классы для объектов работы с данными:
+ru: Модуль содержит необходимые классы для объектов работы с данными:
     - Vacancy: описание вакансии
     - Employer: описание работодателя
     - Salary: описание зарплаты
@@ -7,6 +7,18 @@
     - Experience: описание опыта работы
     - Employment: описание типа занятости
     - Schedule: описание графика работы
+    - SalaryCurrency: описание валюты зарплаты
+    - EmployerUrlLogo: ссылка на логотипы работодателя
+en: The module contains the necessary classes for data objects:
+    - Vacancy: vacancy description
+    - Employer: employer description
+    - Salary: salary description
+    - Area: location description
+    - Experience: work experience description
+    - Employment: employment type description
+    - Schedule: work schedule description
+    - SalaryCurrency: salary currency description
+    - EmployerUrlLogo: links to logos of the employer
 """
 import datetime
 from src.bases.base_objects import JobObject

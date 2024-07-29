@@ -1,8 +1,9 @@
 """
-ru: Главный модуль проекта для запуска.
+ru: Главный модуль проекта для запуска приложения.
+en: Main file of the project for running the application.
 """
-from src.app.hh_ui_cli import UserInterface as UI_APP
-from src.app.hh_run import TestParser as TEST_APP
+from src.app.hh_app import UserInterface as UI_APP
+from src.app.hh_test_cw5 import TestParser as TEST_APP
 
 if __name__ == "__main__":
     text = """Выберите режим:

@@ -1,5 +1,6 @@
 """
 ru: Базовый класс для генерации списка объектов из API.
+en: Base class for generating a list of objects from the API.
 """
 from abc import ABC, abstractmethod
 

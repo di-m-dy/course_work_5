@@ -1,5 +1,6 @@
 """
 ru: Модуль с базовыми интерфейсами
+en: Module with basic interfaces
 """
 import os
 import sys

@@ -1,5 +1,6 @@
 """
 ru: Базовый класс для работы с базой данных.
+en: Abstract class for working with the database.
 """
 from abc import ABC, abstractmethod
 

@@ -1,5 +1,6 @@
 """
 ru: Модуль для работы с запросами к API hh.ru.
+en: Module for working with requests to the hh.ru API.
 """
 
 import datetime
@@ -121,7 +122,7 @@ class HHFindVacancy(ApiFindBase):
         :param sort_point_lat: float, Для сортировки по удаленности - широта
         :param sort_point_lng: float, Для сортировки по удаленности - долгота
         :param clusters: boolean, Кластеры
-        :param describe_arguments: boolean, Описать аргументы  # TODO: Использовать в клиентском коде для коллбеков
+        :param describe_arguments: boolean, Описать аргументы
         :param no_magic: boolean,
         :param premium: boolean, Премиум вакансии
         :param responses_count_enabled: boolean, Количество откликов

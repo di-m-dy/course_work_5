@@ -1,5 +1,6 @@
 """
 ru: Модуль для описания пользовательских исключений пр работе с API.
+en: Module for describing user exceptions when working with the API.
 """
 
 

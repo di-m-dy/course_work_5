@@ -1,5 +1,5 @@
 """
-ru: Модуль для запуска приложений
+ru: Модуль для запуска тестового режима.
 """
 import os
 
@@ -292,8 +292,3 @@ class TestParser:
         self.save_employers()
         os.system('clear')
         self.commands_run()
-
-
-if __name__ == "__main__":
-    app_test = TestParser()
-    app_test.start()
