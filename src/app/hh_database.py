@@ -180,34 +180,68 @@ class DBManager(PostgresDB):
         """
         Список компаний и количество вакансий у каждой.
         """
-        return self._query_fetchall("SELECT e.name, COUNT(v.id) "
+        return self._query_fetchall("SELECT e.id, e.name, COUNT(v.id) "
                                     "FROM employer e "
                                     "LEFT JOIN vacancy v ON e.id = v.employer_id "
-                                    "GROUP BY e.name "
+                                    "GROUP BY e.id "
                                     "ORDER BY COUNT(v.id) DESC")
 
     def get_avg_salary(self):
         """
         ru: Получение средней зарплаты.
+        SELECT
+            ROUND(AVG(
+                CASE
+                    WHEN s2.from IS NOT NULL AND s2.to IS NOT NULL THEN (s2.from + s2.to) / 2
+                    WHEN s2.from IS NOT NULL THEN s2.from
+                    WHEN s2.to IS NOT NULL THEN s2.to
+                    ELSE 0
+                END
+            ), 2)
+        FROM
+            salary AS s2
         """
-        return self._query_fetchall("SELECT ROUND(((AVG(s.from) + AVG(s.to)) / 2), 2)"
-                                    "FROM salary s")
+        return self._query_fetchone("""SELECT
+            ROUND(AVG(
+                CASE
+                    WHEN s.from IS NOT NULL AND s.to IS NOT NULL THEN (s.from + s.to) / 2
+                    WHEN s.from IS NOT NULL THEN s.from
+                    WHEN s.to IS NOT NULL THEN s.to
+                    ELSE 0
+                END
+            ), 2)
+        FROM
+            salary AS s""")
 
     def get_vacancies_with_higher_salary(self):
         """
         ru: Получение вакансий с зарплатой выше средней.
         """
-        return self._query_fetchall("SELECT e.\"name\", v.name, s.from, s.to, c.name, v.alternate_url "
-                                    "FROM vacancy AS v "
-                                    "JOIN employer e "
-                                    "on v.employer_id = e.id "
-                                    "LEFT JOIN salary s "
-                                    "ON v.id = s.vacancy_id "
-                                    "LEFT JOIN currency c "
-                                    "ON s.currency_code = c.code "
-                                    "WHERE round(((s.from + s.to) / 2), 2) > ("
-                                    "SELECT ROUND(((AVG(s.from) + AVG(s.to)) / 2), 2)"
-                                    "FROM salary s)")
+        return self._query_fetchall(f"""SELECT 
+    v.id, 
+    e.name AS employer_name,
+    v.name AS vacancy_name,
+    s.from AS salary_from,
+    s.to AS salary_to,
+    c.name AS currency_name,
+    v.alternate_url
+FROM 
+    vacancy AS v
+JOIN 
+    employer AS e ON v.employer_id = e.id  
+LEFT JOIN 
+    salary AS s ON v.id = s.vacancy_id
+LEFT JOIN 
+    currency AS c ON s.currency_code = c.code
+WHERE 
+    ROUND(
+        CASE 
+            WHEN s.from IS NOT NULL AND s.to IS NOT NULL THEN (s.from + s.to) / 2
+            WHEN s.from IS NOT NULL THEN s.from
+            WHEN s.to IS NOT NULL THEN s.to
+            ELSE 0
+        END, 2
+    ) > {self.get_avg_salary()}""")
 
     def get_vacancies_with_keyword(self, keyword: str):
         """
@@ -288,10 +322,10 @@ class DBManager(PostgresDB):
             (employer.id_, employer.name, employer.alternate_url,
              employer.accredited_it_employer, employer.description, employer.site_url)
         )
+        if employer.logo_urls:
+            self.add_employer_url_logo(employer.id_, employer.logo_urls)
 
-        self.add_employer_url_logo(employer.id_, employer.logo_urls)
-
-    def add_employer_url_logo(self, employer_id: str, employer: HHEmployerUrlLogo):
+    def add_employer_url_logo(self, employer_id: str, url_logo: HHEmployerUrlLogo):
         """
         ru: Добавление логотипа работодателя.
         """
@@ -299,7 +333,7 @@ class DBManager(PostgresDB):
             "INSERT INTO employer_url_logo"
             "(employer_id, original, size_90, size_240)"
             "VALUES (%s, %s, %s, %s)",
-            (employer_id, employer.original, employer.size90, employer.size240)
+            (employer_id, url_logo.original, url_logo.size90, url_logo.size240)
         )
 
     def add_salary_currency(self, currency: HHSalaryCurrency):

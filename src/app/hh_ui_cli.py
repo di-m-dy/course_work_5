@@ -81,7 +81,7 @@ Hint:
         description = "Выберите действие:"
         items = [
             {"text": "Список вакансий", "action": self.find_vacancy_local, "args": {}},
-            {"text": "Список работодателей", "action": self.find_employer_local, "args": {}},
+            {"text": "Список работодателей", "action": self.find_employer_local, "args": {}}
         ]
         footer = [
             {"key": "<", "text": "назад", "action": self.start, "args": {}}
@@ -418,13 +418,17 @@ Hint:
             Breakdown by 10 vacancies per page.
         """
         vacancies = self.db.get_vacancies_objects()
+        avg_salary = self.db.get_avg_salary()
+        top_salary = [i[0] for i in self.db.get_vacancies_with_higher_salary()]
         pages = len(vacancies) // 10
         obj_list = [vacancy for vacancy in vacancies[page * 10:page * 10 + 10]]
         header = "Список вакансий:"
-        description = f"Страница {page + 1} из {pages + 1}."
+        description = f"Страница {page + 1} из {pages + 1}.\n\nСредняя зарплата по всем вакансиям: {avg_salary}\n"
         items = [
             {
-                "text": f"Вакансия: {str(obj.name)}\n Зарплата: {str(obj.salary)}\n Работодатель: {str(obj.employer)}",
+                "text": f"Вакансия: {str(obj.name)}\n"
+                        f"Зарплата: {str(obj.salary)}{' (выше среднего)' if obj.id_ in top_salary else ''}\n"
+                        f"Работодатель: {str(obj.employer)}",
                 "action": self.show_info_vacancy_local,
                 "args": {"vacancy": obj, "page": page}
             } for obj in obj_list
@@ -486,13 +490,15 @@ Hint:
             Breakdown by 10 employers per page.
         """
         employers = self.db.get_employers_objects()
+        employers_vacancy_count = self.db.get_companies_and_vacancies_count()
+        vacancy_count_dict = {i[0]: i[2] for i in employers_vacancy_count}
         pages = len(employers) // 10
         obj_list = [employer for employer in employers[page * 10:page * 10 + 10]]
         header = "Список работодателей:"
         description = f"Страница {page + 1} из {pages + 1}."
         items = [
             {
-                "text": str(obj),
+                "text": str(obj) + f" ({vacancy_count_dict.get(obj.id_, 0)} вакансий)",
                 "action": self.show_info_employer_local,
                 "args": {"employer": obj, "page": page}
             } for obj in obj_list

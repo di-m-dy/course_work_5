@@ -186,8 +186,8 @@ class TestParser:
         result = []
         data = data[:count] if count else data
         for company in data[:count]:
-            name = f"Компания: {company[0]}\n"
-            count = f"Количество вакансий: {company[1]}\n"
+            name = f"Компания: {company[1]}\n"
+            count = f"Количество вакансий: {company[2]}\n"
             result.append(f"{name}{count}\n" + "-" * 20 + "\n")
         return '\n'.join(result)
 
@@ -195,11 +195,7 @@ class TestParser:
         print("ДЕМОНСТРАЦИЯ РАБОТЫ МЕТОДА get_avg_salary\n")
         print("Получение средней зарплаты\n")
         data = self.db.get_avg_salary()
-        result = []
-        for salary in data[-1]:
-            avg = f"Средняя зарплата: {salary}\n"
-            result.append(f"{avg}\n" + "-" * 20 + "\n")
-        return '\n'.join(result)
+        return f"Средняя зарплата: {data}\n"
 
     def get_vacancies_with_higher_salary(self, count: int | None = None):
         print("ДЕМОНСТРАЦИЯ РАБОТЫ МЕТОДА get_vacancies_with_higher_salary\n")
@@ -208,13 +204,13 @@ class TestParser:
         result = []
         data = data[:count] if count else data
         for vacancy in data:
-            employer = f"Работодатель: {vacancy[0]}\n"
-            name = f"Вакансия: {vacancy[1]}\n"
-            salary_sep = '-' if vacancy[3] and vacancy[2] else ''
-            salary = f"Зарплата: {vacancy[2] if vacancy[2] else ''}{salary_sep}{vacancy[3] if vacancy[3] else ''}\n" if \
-                vacancy[2] or vacancy[3] else ''
-            currency = f"Валюта: {vacancy[4]}\n" if vacancy[4] else ''
-            site = f"Ссылка: {vacancy[5]}\n"
+            employer = f"Работодатель: {vacancy[1]}\n"
+            name = f"Вакансия: {vacancy[2]}\n"
+            salary_sep = '-' if vacancy[4] and vacancy[3] else ''
+            salary = f"Зарплата: {vacancy[3] if vacancy[3] else ''}{salary_sep}{vacancy[4] if vacancy[4] else ''}\n" if \
+                vacancy[3] or vacancy[4] else ''
+            currency = f"Валюта: {vacancy[5]}\n" if vacancy[5] else ''
+            site = f"Ссылка: {vacancy[6]}\n"
             result.append(f"{employer}{name}{salary}{currency}{site}\n" + "-" * 20 + "\n")
         return '\n'.join(result)
 

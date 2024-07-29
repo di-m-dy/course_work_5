@@ -52,6 +52,15 @@ class PostgresDB(BaseDB):
             result = cursor.fetchall()
         return result
 
+    def _query_fetchone(self, *args) -> any:
+        """
+        ru: Метод запроса с возвратом одной строки.
+        """
+        with self.__connection.cursor() as cursor:
+            cursor.execute(*args)
+            result = cursor.fetchone()
+        return result[0]
+
     def check_value(self, table_name: str, key_name: str, value: any) -> bool:
         """
         ru: Проверка наличия значения в таблице.
