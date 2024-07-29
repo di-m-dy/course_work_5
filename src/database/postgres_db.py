@@ -20,21 +20,13 @@ class PostgresDB(BaseDB):
         self.password = password
         self.host = host
         self.port = port
-        self.__connection = None
-
-    def _get_connection(self):
-        """
-        ru: Получение соединения.
-        """
-        if self.__connection is None:
-            self.__connection = psycopg2.connect(
-                dbname=self.dbname,
-                user=self.user,
-                password=self.password,
-                host=self.host,
-                port=self.port
-            )
-        return self.__connection
+        self.__connection = psycopg2.connect(
+            dbname=self.dbname,
+            user=self.user,
+            password=self.password,
+            host=self.host,
+            port=self.port
+        )
 
     @staticmethod
     def _get_fields_str(fields: dict) -> str:
@@ -43,26 +35,28 @@ class PostgresDB(BaseDB):
         """
         return ", ".join([f"{key} {value}" for key, value in fields.items()])
 
-    def _query(self, query: str):
+    def _query(self, *args):
         """
         ru: Метод запроса.
         """
-        connection = self._get_connection()
-        cursor = connection.cursor()
-        cursor.execute(query)
-        connection.commit()
-        cursor.close()
+        with self.__connection.cursor() as cursor:
+            cursor.execute(*args)
+            self.__connection.commit()
 
-    def _query_fetchall(self, query: str) -> list:
+    def _query_fetchall(self, *args) -> list:
         """
         ru: Метод запроса с возвратом данных.
         """
-        connection = self._get_connection()
-        cursor = connection.cursor()
-        cursor.execute(query)
-        result = cursor.fetchall()
-        cursor.close()
+        with self.__connection.cursor() as cursor:
+            cursor.execute(*args)
+            result = cursor.fetchall()
         return result
+
+    def check_value(self, table_name: str, key_name: str, value: any) -> bool:
+        """
+        ru: Проверка наличия значения в таблице.
+        """
+        return bool(self._query_fetchall(f"SELECT * FROM {table_name} WHERE {key_name} = '{value}'"))
 
     def create_table(self, table_name: str, fields: dict):
         """

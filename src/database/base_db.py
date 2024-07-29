@@ -10,10 +10,6 @@ class BaseDB(ABC):
     en: Abstract class for working with the database.
     """
 
-    @abstractmethod
-    def _get_connection(self):
-        pass
-
     @staticmethod
     @abstractmethod
     def _get_fields_str(fields: dict) -> str:
